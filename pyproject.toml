@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "arborist"
+dynamic = ["version"]
+description = "Napari GUI for morphological classification of superficial superior colliculus neurons"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Gergely Szarka", email = "szarka.gergely@pte.hu"}]
+dependencies = [
+  "napari[pyside6]>=0.5", "numpy", "scipy", "pandas", "scikit-image", "trimesh",
+  "rtree", "tifffile", "czifile", "imagecodecs", "matplotlib", "plotly", "openpyxl",
+]
+
+[project.gui-scripts]
+arborist = "arborist.gui:main"
+
+[project.urls]
+Homepage = "https://github.com/jerjely/Arborist"
+
+[tool.setuptools]
+packages = ["arborist"]
+
+[tool.setuptools.package-data]
+arborist = ["assets/*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "arborist.__version__"}

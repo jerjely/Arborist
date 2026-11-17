@@ -1,0 +1,13 @@
+napari[pyside6]>=0.5
+numpy
+scipy
+pandas
+scikit-image
+trimesh
+rtree
+tifffile
+czifile
+imagecodecs
+matplotlib
+plotly
+openpyxl

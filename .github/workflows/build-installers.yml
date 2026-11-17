@@ -1,0 +1,80 @@
+# Builds the Arborist installers on GitHub's own machines.
+#   - push a tag like v1.0.1  -> builds Windows .exe + macOS .pkg (Apple silicon & Intel)
+#                                and attaches them to a GitHub Release
+#   - "Run workflow" button   -> builds them as downloadable artifacts only
+name: Build installers
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: ${{ matrix.label }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            label: Windows
+          - os: macos-15
+            label: macOS Apple silicon
+          - os: macos-15-intel
+            label: macOS Intel
+    defaults:
+      run:
+        shell: bash -el {0}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version
+        run: |
+          V=$(python3 -c "import re;print(re.search(r'__version__\s*=\s*\"([^\"]+)\"', open('arborist/__init__.py').read()).group(1))" 2>/dev/null \
+              || python -c "import re;print(re.search(r'__version__\s*=\s*\"([^\"]+)\"', open('arborist/__init__.py').read()).group(1))")
+          echo "ARBORIST_VERSION=$V" >> "$GITHUB_ENV"
+          if [[ "$GITHUB_REF_TYPE" == "tag" && "$GITHUB_REF_NAME" != "v$V" ]]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match __version__ = $V in arborist/__init__.py"; exit 1
+          fi
+
+      - uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-name: build
+          create-args: >-
+            python=3.12
+            constructor
+            conda-standalone
+            rattler-build
+          init-shell: bash
+          cache-environment: true
+
+      - name: Build the arborist conda package
+        run: rattler-build build --recipe packaging/recipe --output-dir build/channel -c conda-forge
+
+      - name: Build the installer
+        run: |
+          export ARBORIST_CHANNEL=$(python -c "import pathlib;print(pathlib.Path('build/channel').resolve().as_uri())")
+          constructor packaging --output-dir dist
+          rm -rf dist/tmp
+          ls -la dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Arborist-${{ env.ARBORIST_VERSION }}-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            dist/*.exe
+            dist/*.pkg
+          if-no-files-found: error
+
+      - name: Attach to the GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.exe
+            dist/*.pkg
+          generate_release_notes: true

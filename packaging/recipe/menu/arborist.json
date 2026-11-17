@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "$id": "https://schemas.conda.io/menuinst-1.schema.json",
+  "menu_name": "Arborist",
+  "menu_items": [
+    {
+      "name": "Arborist",
+      "description": "Morphological classification of superficial SC neurons",
+      "command": [
+        "{{ PYTHON }}",
+        "-m",
+        "arborist"
+      ],
+      "icon": "{{ MENU_DIR }}/arborist.{{ ICON_EXT }}",
+      "activate": false,
+      "terminal": false,
+      "platforms": {
+        "win": {
+          "desktop": true,
+          "app_user_model_id": "PTE.Arborist",
+          "command": [
+            "{{ PYTHONW }}",
+            "-m",
+            "arborist"
+          ]
+        },
+        "osx": {
+          "CFBundleName": "Arborist",
+          "CFBundleDisplayName": "Arborist",
+          "CFBundleIdentifier": "hu.pte.arborist",
+          "info_plist_extra": {
+            "NSRemovableVolumesUsageDescription": "Arborist opens and saves image stacks on USB drives.",
+            "NSDocumentsFolderUsageDescription": "Arborist opens and saves image stacks in your Documents folder."
+          }
+        },
+        "linux": {
+          "Categories": [
+            "Science",
+            "Education"
+          ],
+          "StartupWMClass": "Arborist"
+        }
+      }
+    }
+  ]
+}

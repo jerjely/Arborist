@@ -1,0 +1,51 @@
+# Builds the Arborist installers with conda "constructor".
+# Run from the repo root after building the arborist package with rattler-build:
+#   ARBORIST_CHANNEL=<file:// uri of build/channel>  constructor packaging --output-dir dist
+name: Arborist
+version: {{ environ.get("ARBORIST_VERSION", "1.0.0") }}
+company: Szentágothai Research Centre, University of Pécs
+
+channels:
+  - {{ environ["ARBORIST_CHANNEL"] }}
+  - conda-forge
+
+specs:
+  - python 3.12.*
+  - arborist {{ environ.get("ARBORIST_VERSION", "1.0.0") }}
+
+menu_packages:
+  - arborist
+
+installer_type: exe   # [win]
+installer_type: pkg   # [osx]
+installer_type: sh    # [linux]
+
+license_file: ../LICENSE
+icon_image: ../arborist/assets/Arborist.png
+
+# a self-contained app, not a conda distribution
+initialize_conda: false
+initialize_by_default: false
+register_python: false
+register_python_default: false
+check_path_spaces: false
+keep_pkgs: false
+
+# Windows: per-user install, no admin rights needed.
+# (%LOCALAPPDATA%\Arborist is Arborist's working-copy cache, so the program goes under Programs.)
+default_prefix: '%LOCALAPPDATA%\Programs\Arborist'                # [win]
+default_prefix_domain_user: '%LOCALAPPDATA%\Programs\Arborist'    # [win]
+default_prefix_all_users: '%ProgramFiles%\Arborist'               # [win]
+uninstall_name: Arborist {{ environ.get("ARBORIST_VERSION", "1.0.0") }}  # [win]
+
+# macOS: environment goes to ~/Library/Arborist, Arborist.app to ~/Applications
+pkg_name: Arborist                     # [osx]
+default_location_pkg: Library    # [osx]   -> ~/Library/Arborist
+pkg_domains: {enable_anywhere: false, enable_currentUserHome: true, enable_localSystem: false}   # [osx]
+progress_notifications: true           # [osx]
+virtual_specs: ["__osx>=11"]           # [osx]
+welcome_text: ""                       # [osx]
+readme_text: "Arborist - morphological classification of superficial SC neurons.\n\nThis installs a private Python environment with napari and everything Arborist needs (about 1.5 GB) into your home folder, and adds Arborist to your Applications folder. No administrator password is needed."   # [osx]
+conclusion_text: "Arborist is installed. Open it from Applications (or Launchpad). The first start takes a minute while Python builds its caches."   # [osx]
+
+default_prefix: ~/arborist             # [linux]

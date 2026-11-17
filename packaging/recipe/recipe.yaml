@@ -1,0 +1,66 @@
+context:
+  version: ${{ env.get("ARBORIST_VERSION", default="1.0.0") }}
+
+package:
+  name: arborist
+  version: ${{ version }}
+
+source:
+  path: ../..
+
+build:
+  number: 0
+  noarch: python
+  script:
+    - python -m pip install . --no-deps --no-build-isolation -vv
+    - if: win
+      then:
+        - if not exist "%PREFIX%\Menu" mkdir "%PREFIX%\Menu"
+        - copy "%RECIPE_DIR%\menu\arborist.json" "%PREFIX%\Menu\arborist.json"
+        - copy "%SRC_DIR%\arborist\assets\Arborist.ico" "%PREFIX%\Menu\arborist.ico"
+        - copy "%SRC_DIR%\arborist\assets\Arborist.icns" "%PREFIX%\Menu\arborist.icns"
+        - copy "%SRC_DIR%\arborist\assets\Arborist.png" "%PREFIX%\Menu\arborist.png"
+      else:
+        - mkdir -p "$PREFIX/Menu"
+        - cp "$RECIPE_DIR/menu/arborist.json" "$PREFIX/Menu/arborist.json"
+        - cp "$SRC_DIR/arborist/assets/Arborist.ico" "$PREFIX/Menu/arborist.ico"
+        - cp "$SRC_DIR/arborist/assets/Arborist.icns" "$PREFIX/Menu/arborist.icns"
+        - cp "$SRC_DIR/arborist/assets/Arborist.png" "$PREFIX/Menu/arborist.png"
+
+requirements:
+  host:
+    - python >=3.10
+    - pip
+    - setuptools >=64
+  run:
+    - python >=3.10
+    - napari >=0.5
+    - pyside6
+    - qtpy
+    - superqt
+    - numpy
+    - scipy
+    - pandas
+    - scikit-image
+    - trimesh
+    - rtree
+    - tifffile
+    - czifile
+    - imagecodecs
+    - matplotlib-base
+    - plotly
+    - openpyxl
+    - dask
+
+tests:
+  - python:
+      imports:
+        - arborist
+        - arborist.surface
+        - arborist.morphometry
+      pip_check: false
+
+about:
+  homepage: https://github.com/jerjely/Arborist
+  license: MIT
+  summary: Morphological classification of superficial SC neurons (napari GUI)
