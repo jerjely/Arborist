@@ -21,6 +21,11 @@ jobs:
           sudo apt-get install -y xvfb
           python -m pip install --upgrade pip
           python -m pip install -e .
+      - name: Cache the CZI test file
+        uses: actions/cache@v4
+        with:
+          path: tests/data
+          key: czi-sample-9f6a1a154385
       - name: Run tests
         working-directory: tests
         run: xvfb-run -a -s "-screen 0 1920x1200x24" python run_all.py

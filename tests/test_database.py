@@ -14,7 +14,14 @@ from arborist import database as dbm
 HERE = os.path.dirname(__file__)
 D = os.path.join(HERE, "synthetic")
 ROOT = os.path.join(D, "SC cells")
-CZI = "/home/claude/testczi/s_3_t_1_c_3_z_5.czi"          # real Zeiss file, 20x objective in metadata
+sys.path.insert(0, HERE)
+import czi_sample
+CZI = czi_sample.get()                                     # real Zeiss file, 20x objective in metadata
+if CZI is None:
+    if os.environ.get("CI"):
+        raise SystemExit("the CZI test file could not be downloaded")
+    print("SKIPPED: no CZI test file (offline?) - see tests/czi_sample.py")
+    sys.exit(0)
 shutil.rmtree(ROOT, ignore_errors=True)
 
 

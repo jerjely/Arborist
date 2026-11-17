@@ -10,3 +10,4 @@ tests/_tmp*/
 .DS_Store
 Thumbs.db
 tests/*.png
+tests/data/
