@@ -1,20 +1,32 @@
 # Arborist
 
-*Formerly SC_morph.* Morphology of superior colliculus neurons in the laminar frame: depth from the brain
-surface, position relative to the CR border, branching, Sholl, AIS and classification.
+Arborist is a desktop app for classifying filled neurons of the superficial superior colliculus by their
+morphology. It measures where each traced cell sits relative to the brain surface and the lower edge of
+the Calretinin-positive (sensory) layer, describes its branching, Sholl profile and axon initial segment,
+and groups the cells into types by hierarchical clustering.
+
+## Screenshots
+
+![The Database tab lists every cell in the experiment folders and what is still to do; one click previews the reconstruction with soma in grey, dendrites in red and axon in green (synthetic demo cells).](docs/screenshots/database.jpg)
+
+![A traced neuron on the maximum projection of its 63x stack, with the marked brain surface (cyan) and the CR border (orange), and the same cell and surfaces in 3D.](docs/screenshots/cell-surface.jpg)
+
+![Measuring the distance from the brain surface to the lower edge of the Calretinin-positive band on the 20x image of the section.](docs/screenshots/cr-border.jpg)
+
+![Laminar distribution of one cell: the share of dendrite and axon length in each depth band, from the brain surface (0%) to the CR border (100%).](docs/screenshots/laminar.jpg)
+
+![Sholl analysis by depth: where along the depth of the superficial SC the dendrites cross each Sholl sphere around the soma.](docs/screenshots/sholl-depth.jpg)
+
+![Hierarchical clustering of twelve demo cells, with a small picture of each reconstruction beside its name and the manually assigned type in brackets.](docs/screenshots/clustering.jpg)
+
+*Formerly SC_morph.* Napari-based; tracing stays in Fiji/SNT. Arborist replaces the
+*surface_to_swc_distance* notebook and the Fiji point-tool step.
 
 **Coming from SC_morph:** unzip Arborist into its own folder and run `install.bat` (Mac: `install.command`)
 once. It reuses the existing Python environment (no long download), replaces the old shortcut, and takes
 over the data folder setting and any files still waiting to be copied to the USB stick. Your data is
 untouched: projects (`…_SC_morph.json`), results (`SC_morph_results`) and the database file keep their
 names, so every cell opens as before. The old SC_morph folder can be deleted afterwards.
-
-**Install:** use the installers on the Releases page (below); `install.bat` / `install.command`
-run Arborist from this source folder instead.
-
-Desktop tool (napari-based; tracing stays in Fiji/SNT) for measuring where a filled SC neuron sits relative to the brain
-surface and to the lower edge of the Calretinin-positive (sensory) SC. It replaces the
-*surface_to_swc_distance* notebook and the Fiji point-tool step.
 
 ## Install (recommended): download the installer
 Get the installer for your computer from the repository's **Releases** page (right-hand side on GitHub):
